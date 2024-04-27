@@ -1,27 +1,24 @@
 export default class Spiral {
 
-    constructor(p, x, y, scale = true) {
+    constructor(p, x, y, stroke, scale = true) {
         this.p = p;
         this.x = x;
         this.y = y;
-        this.stroke = this.p.color(
-            this.p.random(0, 360),
-            this.p.random(50, 100),
-            100
-        );
+        this.stroke = stroke;
         this.theta = [];
         this.dir = [];
         this.r = [];
         this.rdir = [];
         this.c = [];
-        this.n = 200;
+        this.n = 128;
         this.maxThetaMultiplier = this.p.random([0.5, 1, 2, 4]);
         // this.thetaDirectionDivisor = 2;
         this.thetaDirectionDivisor = this.p.random([200, 100, 50, 25]);
         // this.thetaDirectionDivisor = 100;
-        this.strokeWeight = p.random([4, 6, 8]);
+        this.strokeWeight = p.random([6, 8, 10]);
         // this.strokeWeight = 4;
         this.scale = scale;
+        this.clockwise = Math.random() < 0.5 ? 1 : -1;
         this.setup();
     }
 
@@ -30,10 +27,10 @@ export default class Spiral {
             this.theta.push(
                 this.p.random(0, this.maxThetaMultiplier * this.p.PI)
             )
-            this.dir.push(1)
-            this.r.push(this.p.random(32, 256))
-            this.rdir.push(1)
-            this.c.push(this.p.createVector(this.p.width / 8, this.p.height / 8))
+            this.dir.push(this.clockwise)
+            this.r.push(this.p.random(32, 512))
+            this.rdir.push(this.clockwise)
+            this.c.push(this.p.createVector(this.p.width / 4, this.p.height / 4))
         }
     }
 

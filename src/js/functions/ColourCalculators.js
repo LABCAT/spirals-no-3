@@ -1,4 +1,4 @@
-function TetradicColourCalculator(p5, hue, saturation = 100, brightness = 100) {
+function TetradicColourCalculator(p5, hue, saturation = 100, brightness = 100, alpha = 1) {
     let set = [];
     let i = 0;
     while(i < 4){
@@ -8,7 +8,7 @@ function TetradicColourCalculator(p5, hue, saturation = 100, brightness = 100) {
           hue,
           saturation,
           brightness,
-          1
+          alpha
         );
         set.push(colour);
         i++;

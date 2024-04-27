@@ -4,6 +4,7 @@ import "p5/lib/addons/p5.sound";
 import * as p5 from "p5";
 import { Midi } from '@tonejs/midi'
 import PlayIcon from './functions/PlayIcon.js';
+import { TetradicColourCalculator } from './functions/ColourCalculators.js';
 import Spiral from './classes/Spiral.js';
 
 import audio from "../audio/spirals-no-3.ogg";
@@ -69,23 +70,21 @@ const P5SketchWithAudio = () => {
 
         p.centreSpirals = [];
 
+        p.colourSet = [];
+
+        p.darkMode = 0;
+
         p.setup = () => {
             p.canvas = p.createCanvas(p.canvasWidth, p.canvasHeight);
-            p.colorMode(p.HSB)
-            p.background(0, 0, 0)
-
-            p.centreSpiral =
-                new Spiral(
-                    p,
-                    0,
-                    0
-                );
+            p.colorMode(p.HSB);
+            p.darkMode = Math.random() > 0.5 ? 0 : 100;
+            p.background(0, 0, p.darkMode);
         }
 
         p.draw = () => {
             if(p.audioLoaded && p.song.isPlaying() && p.spirals.length){
-                p.strokeWeight(16)
-                p.fill(0, 0, 0, 0.05)
+                p.strokeWeight(32)
+                p.fill(0, 0, p.darkMode, 0.05)
                 p.stroke(p.spirals[0].stroke);
                 p.rect(0, 0, p.width, p.height);
                 if(p.centreSpirals.length) {
@@ -106,15 +105,25 @@ const P5SketchWithAudio = () => {
         }
 
         p.executeCueSet1 = ({currentCue}) => {
-            if((currentCue - 1) % 10 === 0) {
+            if((currentCue - 1) % 5 === 0) {
                 p.spirals = [];
+                p.colourSet = TetradicColourCalculator(
+                    p,
+                    p.random(0, 360),
+                    100,
+                    100,
+                    0.8
+                )
             }
 
-            p.spirals[(currentCue - 1) % 10] =
+            const colourSetIndex = (currentCue - 1) % 5 < 4 ? (currentCue - 1) % 5 : 0;  
+
+            p.spirals[(currentCue - 1) % 5] =
                 new Spiral(
                     p,
-                    p.random(0, p.width - p.width/ 16),
-                    p.random(0, p.height - p.height/ 16)
+                    p.random(0, p.width / 2),
+                    p.random(0, p.height / 1.25),
+                    p.colourSet[colourSetIndex]
                 );
         }
 
@@ -132,6 +141,7 @@ const P5SketchWithAudio = () => {
                     p,
                     p.width / 2,
                     p.height / 2,
+                    p.random(p.colourSet),
                     false
                 );
             p.centreSpirals[(currentCue - 1) % 5].stroke = p.spirals[(currentCue - 1) % 5].stroke;
